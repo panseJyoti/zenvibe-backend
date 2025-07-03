@@ -3,6 +3,3 @@ node_modules/
 
 # Environment variables
 .env
-
-#  Uploads folder (user images/files — keep locally or on cloud)
-uploads/
