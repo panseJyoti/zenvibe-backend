@@ -26,7 +26,6 @@ export const deleteActivityById = async (req, res) => {
   }
 };
 
-
 export const getSingleActivity = async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.id).populate('moods');
@@ -36,7 +35,7 @@ export const getSingleActivity = async (req, res) => {
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
   }
-}
+};
 
 export const updateActivity = async (req, res) => {
   try {
@@ -55,12 +54,11 @@ export const updateActivity = async (req, res) => {
       description
     };
 
-    // Handle image update
+    // ✅ Store only filename (not full URL)
     if (req.file) {
-      updateData.image = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      updateData.image = req.file.filename;
     }
 
-    // Handle mood update
     if (moodArray && Array.isArray(moodArray)) {
       updateData.moods = moodArray.map(moodId => new mongoose.Types.ObjectId(moodId));
     }
@@ -80,7 +78,6 @@ export const updateActivity = async (req, res) => {
   }
 };
 
-
 export const createActivity = async (req, res) => {
   try {
     const { name, suggestion, description, moods } = req.body;
@@ -94,7 +91,7 @@ export const createActivity = async (req, res) => {
 
     let imagePath = '';
     if (req.file) {
-      imagePath = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      imagePath = req.file.filename; // ✅ Only filename stored
     }
 
     let activity = await Activity.findOne({ name });
