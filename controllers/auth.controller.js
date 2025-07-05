@@ -80,14 +80,31 @@ export const register = async (req, res) => {
       let user = userExists;
 
       if (!user) {
-       
-        user = await User.create({
-          username,
-          email,
-          password,
-          verified: true,
-          role,
-        });
+        try {
+          user = await User.create({
+            username,
+            email,
+            password,
+            verified: true,
+            role,
+            contact: '',
+            gender: '',
+            dob: null,
+            location: '',
+            skills: [],
+            socialLinks: {
+              linkedin: '',
+              github: '',
+              facebook: '',
+              twitter: '',
+              instagram: ''
+            },
+            profileImage: ''
+          });
+        } catch (err) {
+          console.error("❌ Google Signup Error:", err.message);
+          return res.status(500).json({ msg: "Google signup failed", error: err.message });
+        }
       } else {
         if (!user.verified) {
           user.verified = true;
@@ -114,12 +131,11 @@ export const register = async (req, res) => {
       });
     }
 
-  
+    // ✅ No change in manual signup
     if (userExists) return res.status(400).json({ msg: 'Email already registered' });
 
     const hashed = await bcrypt.hash(password, 10);
 
-   
     const tokenMail = jwt.sign(
       { username, email, password: hashed, role },
       process.env.JWT_SECRET,
