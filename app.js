@@ -22,7 +22,10 @@ const __dirname = path.dirname(__filename);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://zenvibe-frontend.onrender.com'],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use('/', authRoutes);
